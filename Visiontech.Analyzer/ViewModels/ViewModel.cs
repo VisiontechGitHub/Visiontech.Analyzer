@@ -71,7 +71,7 @@ namespace VisualizzatoreWPF.ViewModels
                             {
                                 foreach (analyzedPointDTO point in (computeResponseDTO as analyzeLensResponseDTO).points)
                                 {
-                                    Debug.WriteLine("CICCIO " + string.Join(" ", point.x.ToString(), point.y.ToString(), point.z.ToString(), point.powerMap.ToString(), point.cylinderMap.ToString()));
+                                    Debug.WriteLine("CICCIO2 " + string.Join(" ", point.x.ToString(), point.y.ToString(), point.z.ToString(), point.powerMap.ToString(), point.cylinderMap.ToString()));
                                 }
                             }
 
