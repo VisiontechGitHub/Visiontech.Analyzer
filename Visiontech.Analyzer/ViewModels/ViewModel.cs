@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace VisualizzatoreWPF.ViewModels
+namespace Visiontech.Analyzer.ViewModels
 {
     public class ViewModel : BaseViewModel
     {

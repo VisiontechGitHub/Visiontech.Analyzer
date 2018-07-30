@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VisualizzatoreWPF.ViewModels
+namespace Visiontech.Analyzer.ViewModels
 {
     public class MainModel : BaseViewModel
     {

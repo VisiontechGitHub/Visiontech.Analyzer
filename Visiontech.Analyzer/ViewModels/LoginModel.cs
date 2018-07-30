@@ -4,7 +4,7 @@ using System.Security;
 using System.Windows.Input;
 using Visiontech.Services.Utils;
 
-namespace VisualizzatoreWPF.ViewModels
+namespace Visiontech.Analyzer.ViewModels
 {
     public class LoginModel : BaseViewModel
     {

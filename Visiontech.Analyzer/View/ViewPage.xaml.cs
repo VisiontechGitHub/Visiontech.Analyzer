@@ -10,7 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using Visiontech.Analyzer.View.Abstraction;
 using VisiontechCommons;
-using VisualizzatoreWPF.ViewModels;
+using Visiontech.Analyzer.ViewModels;
+
 namespace Visiontech.Analyzer.View
 {
     public partial class ViewPage : LoadingPage
