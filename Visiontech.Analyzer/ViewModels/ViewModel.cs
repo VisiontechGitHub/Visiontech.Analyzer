@@ -80,7 +80,7 @@ namespace VisualizzatoreWPF.ViewModels
                 while ((line = streamReader.ReadLine()) != null)
                 {
                     string[] coordinates = line.Split(' ');
-                    if (coordinates.Length == 3)
+                    if (coordinates.Length >= 3)
                     {
                         points.Add(new threeDimensionalPointDTO()
                         {
