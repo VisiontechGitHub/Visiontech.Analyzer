@@ -1,12 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Visiontech.Analyzer.Views.Abstraction;
 using VisiontechCommons;
 using VisualizzatoreWPF.ViewModels;
 
-namespace VisualizzatoreWPF
+namespace Visiontech.Analyzer.Views
 {
     
-    public partial class LoginPage : Page
+    public partial class LoginPage : LoadingPage
     {
 
         protected readonly LoginModel model = Container.ServiceProvider.GetService(typeof(LoginModel)) as LoginModel;
