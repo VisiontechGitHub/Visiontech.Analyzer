@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Navigation;
+using Visiontech.Analyzer.View;
 using VisiontechCommons;
 using VisualizzatoreWPF.ViewModels;
 
@@ -15,6 +16,8 @@ namespace VisualizzatoreWPF
             InitializeComponent();
 
             BaseViewModel.IsLoggedChanged += IsLoggedChanged;
+
+            NavigationService.Navigate(new LoginPage());
         }
 
         private void IsLoggedChanged(object sender, bool e)

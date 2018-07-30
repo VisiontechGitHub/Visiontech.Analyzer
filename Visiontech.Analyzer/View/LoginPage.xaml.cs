@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Visiontech.Analyzer.Views.Abstraction;
+using Visiontech.Analyzer.View.Abstraction;
 using VisiontechCommons;
 using VisualizzatoreWPF.ViewModels;
 
-namespace Visiontech.Analyzer.Views
+namespace Visiontech.Analyzer.View
 {
     
     public partial class LoginPage : LoadingPage
