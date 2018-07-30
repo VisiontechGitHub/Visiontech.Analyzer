@@ -8,12 +8,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Visiontech.Analyzer.View.Abstraction;
 using VisiontechCommons;
 using VisualizzatoreWPF.ViewModels;
-
-namespace VisualizzatoreWPF
+namespace Visiontech.Analyzer.View
 {
-    public partial class ViewPage : Page
+    public partial class ViewPage : LoadingPage
     {
 
         protected readonly ViewModel model = Container.ServiceProvider.GetService(typeof(ViewModel)) as ViewModel;
