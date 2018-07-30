@@ -93,6 +93,12 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Urho, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UrhoSharp.1.8.50\lib\net45\Urho.dll</HintPath>
+    </Reference>
+    <Reference Include="Urho.Extensions.Wpf, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UrhoSharp.Wpf.1.8.93\lib\net45\Urho.Extensions.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Visiontech.Commons, Version=1.0.19.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Visiontech.Commons.1.0.19\lib\netstandard2.0\Visiontech.Commons.dll</HintPath>
     </Reference>
@@ -176,5 +182,7 @@
       <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets'))" />
+    <Error Condition="!Exists('..\packages\UrhoSharp.1.8.50\build\net45\UrhoSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UrhoSharp.1.8.50\build\net45\UrhoSharp.targets'))" />
   </Target>
+  <Import Project="..\packages\UrhoSharp.1.8.50\build\net45\UrhoSharp.targets" Condition="Exists('..\packages\UrhoSharp.1.8.50\build\net45\UrhoSharp.targets')" />
 </Project>
