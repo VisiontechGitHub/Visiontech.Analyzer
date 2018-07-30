@@ -4,7 +4,7 @@ using Visiontech.Analyzer.View;
 using VisiontechCommons;
 using VisualizzatoreWPF.ViewModels;
 
-namespace VisualizzatoreWPF
+namespace Visiontech.Analyzer.View
 {
     public partial class MainWindow : NavigationWindow
     {
