@@ -18,7 +18,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -114,6 +114,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Bar.cs" />
+    <Compile Include="Model\Dots.cs" />
+    <Compile Include="Model\DotsOptions.cs" />
     <Compile Include="View\Abstraction\LoadingPage.cs" />
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
@@ -123,6 +126,7 @@
     <Compile Include="ViewModels\LoginModel.cs" />
     <Compile Include="ViewModels\MainModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="View\ThreeDimensionalLensPage.cs" />
     <Compile Include="View\ViewPage.xaml.cs">
       <DependentUpon>ViewPage.xaml</DependentUpon>
     </Compile>

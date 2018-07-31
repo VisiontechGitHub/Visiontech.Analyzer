@@ -77,9 +77,7 @@ namespace Visiontech.Analyzer.View
                 if (analyzeLensResponseDTO.points != null & analyzeLensResponseDTO.points.Any())
                 {
 
-                    double radius = Math.Max(analyzeLensResponseDTO.points.Select(point => Math.Abs(point.x)).Max(), analyzeLensResponseDTO.points.Select(point => Math.Abs(point.y)).Max());
-
-                    ICollection<analyzedPointDTO> points = analyzeLensResponseDTO.points.Where(point => Math.Sqrt(Math.Pow(point.x, 2) + Math.Pow(point.y, 2)) <= radius).Select(point => point as analyzedPointDTO).ToList();
+                    ICollection<analyzedPointDTO> points = analyzeLensResponseDTO.points;
 
                     double maxCylinder = points.Select(point => point.cylinderMap).Max();
                     double minCylinder = points.Select(point => point.cylinderMap).Min();
@@ -141,13 +139,13 @@ namespace Visiontech.Analyzer.View
 
                             }
 
-                            canvas.DrawBitmap(bitmap.Resize(new SKImageInfo(Convert.ToInt32(bitmapSide / 6), Convert.ToInt32(bitmapSide)), SKBitmapResizeMethod.Mitchell), new SKRect(Convert.ToSingle(info.Width - bitmapSide / 6), 0, Convert.ToSingle(info.Width), info.Height));
+                            canvas.DrawBitmap(bitmap.Resize(new SKImageInfo(Convert.ToInt32(bitmapSide / 6.0), Convert.ToInt32(bitmapSide)), SKBitmapResizeMethod.Mitchell), new SKRect(Convert.ToSingle(info.Width - bitmapSide / 6.0), 0, Convert.ToSingle(info.Width), info.Height));
 
                         }
 
-                        blackSKPaint.TextSize = info.Height / 32;
+                        blackSKPaint.TextSize = info.Height / 32f;
 
-                        float textRange = (info.Height - blackSKPaint.TextSize * 3) / 6;
+                        float textRange = (info.Height - blackSKPaint.TextSize * 3) / 6f;
 
                         canvas.DrawText(string.Format("{0:N2}", minCylinder), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2, blackSKPaint);
                         canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange, blackSKPaint);
@@ -212,5 +210,52 @@ namespace Visiontech.Analyzer.View
             }
 
         }
+
+        private void ComputeChart(analyzeLensResponseDTO analyzeLensResponseDTO, Func<threeDimensionalPointDTO, double> Mapping)
+        {
+
+            NavigationService.Navigate(new ThreeDimensionalLensPage(analyzeLensResponseDTO.points, Mapping));
+
+        }
+
+        private void Left_Toolbar_3D_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToZ);
+        }
+        private void Right_Toolbar_3D_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToZ);
+        }
+        private void Left_Toolbar_CylinderMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToCylinderMap);
+        }
+        private void Right_Toolbar_CylinderMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToCylinderMap);
+        }
+        private void Left_Toolbar_PowerMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToPowerMap);
+        }
+        private void Right_Toolbar_PowerMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToPowerMap);
+        }
+
+        private double ToZ(threeDimensionalPointDTO point)
+        {
+            return point.z;
+        }
+        private double ToCylinderMap(threeDimensionalPointDTO point)
+        {
+            return (point as analyzedPointDTO).cylinderMap;
+        }
+        private double ToPowerMap(threeDimensionalPointDTO point)
+        {
+            return (point as analyzedPointDTO).powerMap;
+        }
+
+
     }
 }

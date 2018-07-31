@@ -11,17 +11,34 @@
       Title="ViewPage"
       AllowDrop="True">
 
-    <Grid AllowDrop="True">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Click="Left_Toolbar_3D_Clicked" Content="3D" />
+                <Button Click="Left_Toolbar_CylinderMap_Clicked" Content="CylMap" />
+                <Button Click="Left_Toolbar_PowerMap_Clicked" Content="PowMap" />
+            </ToolBar>
+            <ToolBar>
+                <Button Click="Right_Toolbar_3D_Clicked" Content="3D" />
+                <Button Click="Right_Toolbar_CylinderMap_Clicked" Content="CylMap" />
+                <Button Click="Right_Toolbar_PowerMap_Clicked" Content="PowMap" />
+            </ToolBar>
+        </ToolBarTray>
+        
+        <Grid AllowDrop="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-        <views:SKElement Grid.Column="0" Name="LeftLens" PaintSurface="PaintLens" Drop="DropFile" AllowDrop="true"/>
-        <views:SKElement Grid.Column="1" Name="RightLens" PaintSurface="PaintLens" Drop="DropFile" AllowDrop="true"/>
+            <views:SKElement Grid.Column="0" Name="LeftLens" PaintSurface="PaintLens" Drop="DropFile" AllowDrop="true"/>
+            <views:SKElement Grid.Column="1" Name="RightLens" PaintSurface="PaintLens" Drop="DropFile" AllowDrop="true"/>
 
-    </Grid>
+        </Grid>
+    </DockPanel>
+
+
 </abstraction:LoadingPage>
