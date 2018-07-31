@@ -2,7 +2,7 @@
 using System.Windows.Navigation;
 using Visiontech.Analyzer.View;
 using VisiontechCommons;
-using VisualizzatoreWPF.ViewModels;
+using Visiontech.Analyzer.ViewModels;
 
 namespace Visiontech.Analyzer.View
 {

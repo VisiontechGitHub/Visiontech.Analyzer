@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Visiontech.Services.Utils;
 using VisiontechCommons;
-using VisualizzatoreWPF.ViewModels;
+using Visiontech.Analyzer.ViewModels;
 
 namespace VisualizzatoreWPF
 {

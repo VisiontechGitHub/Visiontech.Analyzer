@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace VisualizzatoreWPF.ViewModels
+namespace Visiontech.Analyzer.ViewModels
 {
     public class Command : ICommand
     {

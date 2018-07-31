@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Visiontech.Analyzer.View.Abstraction;
 using VisiontechCommons;
-using VisualizzatoreWPF.ViewModels;
+using Visiontech.Analyzer.ViewModels;
 
 namespace Visiontech.Analyzer.View
 {
