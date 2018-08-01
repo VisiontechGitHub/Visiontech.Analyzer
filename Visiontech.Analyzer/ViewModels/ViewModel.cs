@@ -23,6 +23,9 @@ namespace Visiontech.Analyzer.ViewModels
 
         public ICommand LoadFileCommand { get; }
 
+        public analyzeLensResponseDTO LeftAnalyzeLensResponse { get; set; }
+        public analyzeLensResponseDTO RightAnalyzeLensResponse { get; set; }
+
         public event EventHandler<Tuple<Side, analyzeLensResponseDTO>> LensAnalyzed;
 
         public ViewModel()
@@ -74,6 +77,17 @@ namespace Visiontech.Analyzer.ViewModels
 
             foreach (Task<Tuple<Side, analyzeLensResponseDTO>> task in tasks)
             {
+
+                switch (task.Result.Item1)
+                {
+                    case Side.LEFT:
+                        LeftAnalyzeLensResponse = task.Result.Item2;
+                        break;
+                    case Side.RIGHT:
+                        RightAnalyzeLensResponse = task.Result.Item2;
+                        break;
+                }
+
                 LensAnalyzed.Invoke(this, task.Result);
             }
 
