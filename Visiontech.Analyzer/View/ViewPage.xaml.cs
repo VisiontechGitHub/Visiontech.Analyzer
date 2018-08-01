@@ -22,6 +22,7 @@ namespace Visiontech.Analyzer.View
         private void Model_LensAnalyzed(object sender, Tuple<ViewModel.Side, analyzeLensResponseDTO> tuple)
         {
 
+
             Dispatcher.Invoke(() => {
                 RightLens.InvalidateVisual();
                 LeftLens.InvalidateVisual();
@@ -197,27 +198,27 @@ namespace Visiontech.Analyzer.View
 
         private void Left_Toolbar_3D_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToZ);
+            ComputeChart(model.LeftAnalyzeLensResponse, ToZ);
         }
         private void Right_Toolbar_3D_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToZ);
+            ComputeChart(model.RightAnalyzeLensResponse, ToZ);
         }
         private void Left_Toolbar_CylinderMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToCylinderMap);
+            ComputeChart(model.LeftAnalyzeLensResponse, ToCylinderMap);
         }
         private void Right_Toolbar_CylinderMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToCylinderMap);
+            ComputeChart(model.RightAnalyzeLensResponse, ToCylinderMap);
         }
         private void Left_Toolbar_PowerMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(LeftLens.DataContext as analyzeLensResponseDTO, ToPowerMap);
+            ComputeChart(model.LeftAnalyzeLensResponse, ToPowerMap);
         }
         private void Right_Toolbar_PowerMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(RightLens.DataContext as analyzeLensResponseDTO, ToPowerMap);
+            ComputeChart(model.RightAnalyzeLensResponse, ToPowerMap);
         }
 
         private double ToZ(threeDimensionalPointDTO point)
