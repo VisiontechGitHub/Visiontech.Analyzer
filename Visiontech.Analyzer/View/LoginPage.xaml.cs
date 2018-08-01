@@ -7,15 +7,12 @@ using Visiontech.Analyzer.ViewModels;
 namespace Visiontech.Analyzer.View
 {
     
-    public partial class LoginPage : LoadingPage
+    public partial class LoginPage : LoadingPage<LoginModel>
     {
-
-        protected readonly LoginModel model = Container.ServiceProvider.GetService(typeof(LoginModel)) as LoginModel;
 
         public LoginPage()
         {
             InitializeComponent();
-            DataContext = model;
         }
 
         private void Password_PasswordChanged(object sender, RoutedEventArgs e)

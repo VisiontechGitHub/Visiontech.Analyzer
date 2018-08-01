@@ -46,8 +46,6 @@ namespace Visiontech.Analyzer.Model
         {
             base.Start();
 
-            Debug.WriteLine("STRONZO3 " + Points is null);
-
             // 3D scene with Octree
             var scene = new Scene(Context);
             octree = scene.CreateComponent<Octree>();

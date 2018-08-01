@@ -23,7 +23,6 @@ namespace Visiontech.Analyzer.ViewModels
                     SetProperty(ref isBusy, value);
                     if (IsBusyChanged != null)
                     {
-                        SetProperty(ref isBusy, value);
                         IsBusyChanged.Invoke(this, value);
                     }
                 }
@@ -72,6 +71,7 @@ namespace Visiontech.Analyzer.ViewModels
             [CallerMemberName]string propertyName = "",
             Action onChanged = null)
         {
+
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
 

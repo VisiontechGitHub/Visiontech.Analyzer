@@ -27,26 +27,29 @@ namespace Visiontech.Analyzer.ViewModels
 
         public ViewModel()
         {
-            LoadFileCommand = new Command((parameter) => LoadFileAsync(parameter as Tuple<Side, string[]>), (parameter) => !(parameter is null) && parameter is Tuple<Side, string[]>  && (parameter as Tuple<Side, string[]>).Item2.Length > 0);
+            LoadFileCommand = new Command((parameter) => LoadFileAsync(parameter as Tuple<Side, string[]>), (parameter) => !(parameter is null) && parameter is Tuple<Side, string[]> && (parameter as Tuple<Side, string[]>).Item2.Length > 0);
         }
 
-        private void LoadFileAsync(Tuple<Side, string[]> tuple)
+        private async void LoadFileAsync(Tuple<Side, string[]> tuple)
         {
+
+            IsBusy = true;
 
             analyzeLensRequestDTO analyzeLensRequestDTO = new analyzeLensRequestDTO();
             ICollection<threeDimensionalPointDTO> points = new Collection<threeDimensionalPointDTO>();
+            ICollection<Task<Tuple<Side, analyzeLensResponseDTO>>> tasks = new Collection<Task<Tuple<Side, analyzeLensResponseDTO>>>();
 
             switch (Path.GetExtension(tuple.Item2[0]))
             {
                 case ".txt":
                 case ".xyz":
 
-                    Task.Run(() => LensAnalyzed.Invoke(this, new Tuple<Side, analyzeLensResponseDTO>(tuple.Item1, computeSoapClient.analyzeLens(FromXYZFile(tuple.Item2[0])) as analyzeLensResponseDTO)));
+                    tasks.Add(Task.Run(() => new Tuple<Side, analyzeLensResponseDTO>(tuple.Item1, computeSoapClient.analyzeLens(FromXYZFile(tuple.Item2[0])) as analyzeLensResponseDTO)));
 
                     break;
                 case ".hmf":
 
-                    Task.Run(() => LensAnalyzed.Invoke(this, new Tuple<Side, analyzeLensResponseDTO>(tuple.Item1, computeSoapClient.analyzeLens(FromHMFFile(tuple.Item2[0])) as analyzeLensResponseDTO)));
+                    tasks.Add(Task.Run(() => new Tuple<Side, analyzeLensResponseDTO>(tuple.Item1, computeSoapClient.analyzeLens(FromHMFFile(tuple.Item2[0])) as analyzeLensResponseDTO)));
 
                     break;
                 case ".sdf":
@@ -54,15 +57,27 @@ namespace Visiontech.Analyzer.ViewModels
                     Tuple<analyzeLensRequestDTO, analyzeLensRequestDTO> requests = FromSDFFile(tuple.Item2[0]);
                     if (requests.Item1 != null)
                     {
-                        Task.Run(() => LensAnalyzed.Invoke(this, new Tuple<Side, analyzeLensResponseDTO>(Side.LEFT, computeSoapClient.analyzeLens(requests.Item1) as analyzeLensResponseDTO)));
+                        tasks.Add(Task.Run(() => new Tuple<Side, analyzeLensResponseDTO>(Side.LEFT, computeSoapClient.analyzeLens(requests.Item1) as analyzeLensResponseDTO)));
                     }
                     if (requests.Item2 != null)
                     {
-                        Task.Run(() => LensAnalyzed.Invoke(this, new Tuple<Side, analyzeLensResponseDTO>(Side.RIGHT, computeSoapClient.analyzeLens(requests.Item2) as analyzeLensResponseDTO)));
+                        tasks.Add(Task.Run(() => new Tuple<Side, analyzeLensResponseDTO>(Side.RIGHT, computeSoapClient.analyzeLens(requests.Item2) as analyzeLensResponseDTO)));
                     }
 
                     break;
             }
+
+            foreach (Task<Tuple<Side, analyzeLensResponseDTO>> task in tasks)
+            {
+                await task;
+            }
+
+            foreach (Task<Tuple<Side, analyzeLensResponseDTO>> task in tasks)
+            {
+                LensAnalyzed.Invoke(this, task.Result);
+            }
+
+            IsBusy = false;
 
         }
 

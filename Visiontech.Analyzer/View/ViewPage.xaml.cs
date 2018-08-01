@@ -1,23 +1,16 @@
 ﻿using Org.Visiontech.Compute;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using SkiaSharp.Views.WPF;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using Visiontech.Analyzer.View.Abstraction;
-using VisiontechCommons;
 using Visiontech.Analyzer.ViewModels;
 
 namespace Visiontech.Analyzer.View
 {
-    public partial class ViewPage : LoadingPage
+    public partial class ViewPage : LoadingPage<ViewModel>
     {
-
-        protected readonly ViewModel model = Container.ServiceProvider.GetService(typeof(ViewModel)) as ViewModel;
 
         public ViewPage()
         {
@@ -28,38 +21,21 @@ namespace Visiontech.Analyzer.View
 
         private void Model_LensAnalyzed(object sender, Tuple<ViewModel.Side, analyzeLensResponseDTO> tuple)
         {
-            
-            switch (tuple.Item1)
-            {
-                case ViewModel.Side.LEFT:
-                    Dispatcher.Invoke(() => {
-                        LeftLens.DataContext = tuple.Item2;
-                        LeftLens.InvalidateVisual();
-                    });
-                    break;
-                case ViewModel.Side.RIGHT:
-                    Dispatcher.Invoke(() => {
-                        RightLens.DataContext = tuple.Item2;
-                        RightLens.InvalidateVisual();
-                    });
-                    break;
-            }
 
-        }
+            Dispatcher.Invoke(() => {
+                RightLens.InvalidateVisual();
+                LeftLens.InvalidateVisual();
+            });
 
-        private void DropFile(object sender, DragEventArgs e)
-        {
-            ViewModel.Side side = RightLens.Equals(sender) ? ViewModel.Side.RIGHT : ViewModel.Side.LEFT;
-            model.LoadFileCommand.Execute(new Tuple<ViewModel.Side, string[]>(side, e.Data.GetData(DataFormats.FileDrop) as string[]));
         }
 
         private void PaintLens(object sender, SKPaintSurfaceEventArgs args)
         {
 
-            if ((sender as SKElement).DataContext != null && (sender as SKElement).DataContext is analyzeLensResponseDTO)
-            {
+            analyzeLensResponseDTO analyzeLensResponseDTO = RightLens.Equals(sender) ? model.RightAnalyzeLensResponse : model.LeftAnalyzeLensResponse;
 
-                analyzeLensResponseDTO analyzeLensResponseDTO = (sender as SKElement).DataContext as analyzeLensResponseDTO;
+            if (analyzeLensResponseDTO != null)
+            {
 
                 SKImageInfo info = args.Info;
                 SKSurface surface = args.Surface;
