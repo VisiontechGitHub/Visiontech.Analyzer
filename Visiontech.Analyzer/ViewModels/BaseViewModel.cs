@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Visiontech.Analyzer.ViewModels
 {
@@ -21,10 +18,6 @@ namespace Visiontech.Analyzer.ViewModels
                 if (isBusy != value)
                 {
                     SetProperty(ref isBusy, value);
-                    if (IsBusyChanged != null)
-                    {
-                        IsBusyChanged.Invoke(this, value);
-                    }
                 }
             }
         }
@@ -38,10 +31,6 @@ namespace Visiontech.Analyzer.ViewModels
                 if (isLogged != value)
                 {
                     SetProperty(ref isLogged, value);
-                    if (IsLoggedChanged != null)
-                    {
-                        IsLoggedChanged.Invoke(this, value);
-                    }
                 }
             }
         }
@@ -55,23 +44,15 @@ namespace Visiontech.Analyzer.ViewModels
                 if (isConnected != value)
                 {
                     SetProperty(ref isConnected, value);
-                    if (IsConnectedChanged != null)
-                    {
-                        IsConnectedChanged.Invoke(this, value);
-                    }
                 }
             }
         }
-
-        public event EventHandler<bool> IsBusyChanged;
-        public static event EventHandler<bool> IsLoggedChanged;
-        public static event EventHandler<bool> IsConnectedChanged;
 
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName]string propertyName = "",
             Action onChanged = null)
         {
-
+            
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
 

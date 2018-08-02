@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,10 +22,31 @@ namespace Visiontech.Analyzer.ViewModels
 
         public ICommand LoadFileCommand { get; }
 
-        public analyzeLensResponseDTO LeftAnalyzeLensResponse { get; set; }
-        public analyzeLensResponseDTO RightAnalyzeLensResponse { get; set; }
+        private static analyzeLensResponseDTO leftAnalyzeLensResponse = null;
+        public analyzeLensResponseDTO LeftAnalyzeLensResponse
+        {
+            get { return leftAnalyzeLensResponse; }
+            set
+            {
+                if (leftAnalyzeLensResponse != value)
+                {
+                    SetProperty(ref leftAnalyzeLensResponse, value);
+                }
+            }
+        }
 
-        public event EventHandler<Tuple<Side, analyzeLensResponseDTO>> LensAnalyzed;
+        private static analyzeLensResponseDTO rightAnalyzeLensResponse = null;
+        public analyzeLensResponseDTO RightAnalyzeLensResponse
+        {
+            get { return rightAnalyzeLensResponse; }
+            set
+            {
+                if (rightAnalyzeLensResponse != value)
+                {
+                    SetProperty(ref rightAnalyzeLensResponse, value);
+                }
+            }
+        }
 
         public ViewModel()
         {
@@ -88,7 +108,6 @@ namespace Visiontech.Analyzer.ViewModels
                         break;
                 }
 
-                LensAnalyzed.Invoke(this, task.Result);
             }
 
             IsBusy = false;

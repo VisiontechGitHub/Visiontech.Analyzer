@@ -15,17 +15,8 @@ namespace Visiontech.Analyzer.View
         {
             InitializeComponent();
 
-            BaseViewModel.IsLoggedChanged += IsLoggedChanged;
-
             NavigationService.Navigate(new LoginPage());
         }
 
-        private void IsLoggedChanged(object sender, bool e)
-        {
-            if (model.IsLogged)
-            {
-                NavigationService.Navigate(new ViewPage());
-            }
-        }
     }
 }

@@ -11,24 +11,19 @@
       xmlns:views="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ViewPage"
-      AllowDrop="True">
+      Title="ViewPage">
 
     <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top">
+        
+        <ToolBarTray DockPanel.Dock="Top" Name="ToolBar" Visibility="Collapsed">
             <ToolBar>
-                <Button Click="Left_Toolbar_3D_Clicked" Content="3D" />
-                <Button Click="Left_Toolbar_CylinderMap_Clicked" Content="CylMap" />
-                <Button Click="Left_Toolbar_PowerMap_Clicked" Content="PowMap" />
-            </ToolBar>
-            <ToolBar>
-                <Button Click="Right_Toolbar_3D_Clicked" Content="3D" />
-                <Button Click="Right_Toolbar_CylinderMap_Clicked" Content="CylMap" />
-                <Button Click="Right_Toolbar_PowerMap_Clicked" Content="PowMap" />
+                <Button Click="Toolbar_3D_Clicked" Content="3D" />
+                <Button Click="Toolbar_CylinderMap_Clicked" Content="CylMap" />
+                <Button Click="Toolbar_PowerMap_Clicked" Content="PowMap" />
             </ToolBar>
         </ToolBarTray>
         
-        <Grid AllowDrop="True">
+        <Grid AllowDrop="True" Background="Red">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -40,7 +35,6 @@
             <views:SKElement Grid.Column="0" Name="LeftLens" PaintSurface="PaintLens" AllowDrop="true">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
-
                         <viewmodels:EventCommandExecuter 
                             Command="{Binding LoadFileCommand}" 
                             EventArgsConverter="{x:Static viewmodels:DropEventToTupleConverter.Default}"
@@ -48,6 +42,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </views:SKElement>
+
             <views:SKElement Grid.Column="1" Name="RightLens" PaintSurface="PaintLens" AllowDrop="true">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">

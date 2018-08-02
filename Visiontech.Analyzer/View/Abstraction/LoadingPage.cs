@@ -44,7 +44,7 @@ namespace Visiontech.Analyzer.View.Abstraction
 
             DataContext = model;
 
-            model.IsBusyChanged += IsBusyChanged;
+            model.PropertyChanged += Model_PropertyChanged;
 
             absoluteLayout = new Grid();
 
@@ -71,16 +71,17 @@ namespace Visiontech.Analyzer.View.Abstraction
 
         }
 
-        protected void IsBusyChanged(object sender, bool IsBusy)
+        private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-
-            Dispatcher.Invoke(() =>
-                {
-                    overlay.Visibility = IsBusy ? Visibility.Visible : Visibility.Hidden;
-                    busyIndicator.Visibility = IsBusy ? Visibility.Visible : Visibility.Hidden;
-                }
-            );
-
+            if ("IsBusy".Equals(e.PropertyName))
+            {
+                Dispatcher.Invoke(() =>
+                    {
+                        overlay.Visibility = model.IsBusy ? Visibility.Visible : Visibility.Hidden;
+                        busyIndicator.Visibility = model.IsBusy ? Visibility.Visible : Visibility.Hidden;
+                    }
+                );
+            }
         }
 
     }
