@@ -75,6 +75,13 @@
                 <StackPanel Background="White">
                     <TextBlock>
                         <TextBlock.Text>
+                            <MultiBinding StringFormat="Z : {0:N2}">
+                                <Binding Path="z"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock.Text>
                             <MultiBinding StringFormat="CylinderMap : {0:N2}">
                                 <Binding Path="cylinderMap"/>
                             </MultiBinding>
