@@ -3,23 +3,62 @@
       xmlns:abstraction="clr-namespace:Visiontech.Analyzer.View.Abstraction"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
       xmlns:viewmodels="clr-namespace:Visiontech.Analyzer.ViewModels" 
-      xmlns:view="clr-namespace:Visiontech.Analyzer.View" 
       x:TypeArguments="viewmodels:ViewModel"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:views="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="ViewPage">
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+                         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                         Title="ViewPage">
 
-    <DockPanel>
-        
+    <DockPanel Name="dockPanel">
+
         <ToolBarTray DockPanel.Dock="Top" Name="ToolBar" Visibility="Collapsed">
-            <ToolBar>
-                <Button Click="Toolbar_3D_Clicked" Content="3D" />
-                <Button Click="Toolbar_CylinderMap_Clicked" Content="CylMap" />
-                <Button Click="Toolbar_PowerMap_Clicked" Content="PowMap" />
+            <ToolBar Height="{c:Binding ActualHeight/12, ElementName=dockPanel}" Width="{c:Binding ActualWidth/3, ElementName=dockPanel}">
+                <xctk:IconButton ToolTip="3D Curve" Click="Toolbar_CurveMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/Curve_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton Name="Test" ToolTip="Cylinder Map Curve" Click="Toolbar_CylinderMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/Cylinder_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton ToolTip="Power Map Curve" Click="Toolbar_PowerMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/Power_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+            </ToolBar>
+            <ToolBar Height="{c:Binding ActualHeight/12, ElementName=dockPanel}" Width="{c:Binding ActualWidth/3, ElementName=dockPanel}">
+                <xctk:IconButton ToolTip="3D Curve" Click="Toolbar_3DCurveMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/3D_Curve_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton ToolTip="Cylinder Map Curve" Click="Toolbar_3DCylinderMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/3D_Cylinder_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton ToolTip="Power Map Curve" Click="Toolbar_3DPowerMap_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/3D_Power_Map.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+            </ToolBar>
+            <ToolBar Height="{c:Binding ActualHeight/12, ElementName=dockPanel}" Width="{c:Binding ActualWidth/3, ElementName=dockPanel}">
+                <xctk:IconButton ToolTip="Compare" Click="Toolbar_Compare_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/Balance.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton ToolTip="Mask" Click="Toolbar_Mask_Clicked">
+                    <xctk:IconButton.Icon>
+                        <Image Source="{svgc:SvgImage /Resources/Mask.svg}"/>
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
             </ToolBar>
         </ToolBarTray>
         
@@ -32,6 +71,25 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
+            <Popup Name="floatingTip" AllowsTransparency="True" Placement="Relative">
+                <StackPanel Background="White">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="CylinderMap : {0:N2}">
+                                <Binding Path="cylinderMap"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="PowerMap : {0:N2}">
+                                <Binding Path="powerMap"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+            </Popup>
+            
             <views:SKElement Grid.Column="0" Name="LeftLens" PaintSurface="PaintLens" AllowDrop="true">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
@@ -42,7 +100,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </views:SKElement>
-
+            
             <views:SKElement Grid.Column="1" Name="RightLens" PaintSurface="PaintLens" AllowDrop="true">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">

@@ -4,6 +4,7 @@ using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -16,13 +17,17 @@ namespace Visiontech.Analyzer.View
     {
 
         private SKElement selected;
+        private Func<threeDimensionalPointDTO, double> mapping;
+        private bool compare = false;
+        private static bool mask = true;
 
         public ViewPage()
         {
             InitializeComponent();
 
-            model.PropertyChanged += Model_PropertyChanged;
+            mapping = ToCylinderMap;
 
+            model.PropertyChanged += Model_PropertyChanged;
         }
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -33,11 +38,13 @@ namespace Visiontech.Analyzer.View
                 RightLens.InvalidateVisual();
                 RightLens.MouseLeftButtonDown -= LensSelected;
                 RightLens.MouseLeftButtonDown += LensSelected;
+                RightLens.MouseMove += Tooltip_MouseMove;
             } else if ("LeftAnalyzeLensResponse".Equals(e.PropertyName))
             {
                 LeftLens.InvalidateVisual();
                 LeftLens.MouseLeftButtonDown -= LensSelected;
                 LeftLens.MouseLeftButtonDown += LensSelected;
+                LeftLens.MouseMove += Tooltip_MouseMove;
             }
 
         }
@@ -105,26 +112,26 @@ namespace Visiontech.Analyzer.View
             if (analyzeLensResponseDTO != null && analyzeLensResponseDTO.points != null & analyzeLensResponseDTO.points.Any())
             {
 
-                ICollection<analyzedPointDTO> points = analyzeLensResponseDTO.points;
+                int sqrt = Convert.ToInt32(Math.Sqrt(analyzeLensResponseDTO.points.Count()));
+                int side = (sqrt - 1) / 2;
 
-                double maxCylinder = points.Select(point => point.cylinderMap).Max();
-                double minCylinder = points.Select(point => point.cylinderMap).Min();
-                double cylinderRange = (maxCylinder - minCylinder) / 6.0;
+                ICollection<analyzedPointDTO> points = analyzeLensResponseDTO.points.Where(p => IsInside(p, side + 1)).ToList();
 
-                if (cylinderRange > 0)
+                double max = compare && model.RightAnalyzeLensResponse != null && model.LeftAnalyzeLensResponse != null ? Math.Max(model.RightAnalyzeLensResponse.points.Where(p => IsInside(p, side + 1)).Select(mapping).Max(), model.LeftAnalyzeLensResponse.points.Where(p => IsInside(p, side + 1)).Select(mapping).Max()) : points.Where(p => IsInside(p, side + 1)).Select(mapping).Max();
+                double min = compare && model.RightAnalyzeLensResponse != null && model.LeftAnalyzeLensResponse != null ? Math.Min(model.RightAnalyzeLensResponse.points.Where(p => IsInside(p, side + 1)).Select(mapping).Min(), model.LeftAnalyzeLensResponse.points.Where(p => IsInside(p, side + 1)).Select(mapping).Min()) : points.Where(p => IsInside(p, side + 1)).Select(mapping).Min();
+                double range = (max - min) / 6.0;
+
+                if (range > 0)
                 {
 
-                    double doubleCylinderRange = cylinderRange * 2;
-                    double tripleCylinderRange = cylinderRange * 3;
-                    double fiveCylinderRange = cylinderRange * 5;
+                    double centerX = info.Width / 2.0;
+                    double centerY = info.Height / 2.0;
+                    double bitmapSide = Math.Min(centerX, centerY);
+                    double radius = bitmapSide * 5 / 6;
 
-                    double centerX = info.Width / 2;
-                    double centerY = info.Height / 2;
-
-                    int sqrt = Convert.ToInt32(Math.Sqrt(points.Count));
-                    int side = (sqrt - 1) / 2;
-
-                    double bitmapSide = Math.Min(info.Width, info.Height) / 2.0;
+                    double doubleRange = range * 2;
+                    double tripleRange = range * 3;
+                    double fiveRange = range * 5;
 
                     double sqrtRange = sqrt / 6.0;
                     double doubleSqrtRange = sqrtRange * 2;
@@ -175,13 +182,13 @@ namespace Visiontech.Analyzer.View
 
                     float textRange = (info.Height - blackSKPaint.TextSize * 3) / 6f;
 
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange * 2), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 2, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange * 3), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 3, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange * 4), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 4, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", minCylinder + cylinderRange * 5), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 5, blackSKPaint);
-                    canvas.DrawText(string.Format("{0:N2}", maxCylinder), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 6, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min + range), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min + range * 2), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 2, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min + range * 3), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 3, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min + range * 4), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 4, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", min + range * 5), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 5, blackSKPaint);
+                    canvas.DrawText(string.Format("{0:N2}", max), Convert.ToSingle(info.Width - bitmapSide / 8), blackSKPaint.TextSize * 2 + textRange * 6, blackSKPaint);
 
                     using (SKBitmap bitmap = new SKBitmap(sqrt, sqrt))
                     {
@@ -191,28 +198,28 @@ namespace Visiontech.Analyzer.View
 
                             SKColor color = SKColors.Black;
 
-                            double value = point.cylinderMap - minCylinder;
+                            double value = mapping.Invoke(point) - min;
 
-                            switch (Math.Floor(value / cylinderRange))
+                            switch (Math.Floor(value / range))
                             {
 
                                 case 0:
-                                    color = new SKColor(Convert.ToByte(Math.Round(value / cylinderRange * 255)), Convert.ToByte(Math.Round(value / cylinderRange * 255)), 255);
+                                    color = new SKColor(Convert.ToByte(Math.Round(value / range * 255)), Convert.ToByte(Math.Round(value / range * 255)), 255);
                                     break;
                                 case 1:
-                                    color = new SKColor(Convert.ToByte(Math.Round((doubleCylinderRange - value) / cylinderRange * 255)), 255, 255);
+                                    color = new SKColor(Convert.ToByte(Math.Round((doubleRange - value) / range * 255)), 255, 255);
                                     break;
                                 case 2:
-                                    color = new SKColor(0, 255, Convert.ToByte(Math.Round((tripleCylinderRange - value) / cylinderRange * 255)));
+                                    color = new SKColor(0, 255, Convert.ToByte(Math.Round((tripleRange - value) / range * 255)));
                                     break;
                                 case 3:
-                                    color = new SKColor(Convert.ToByte(Math.Round((value - tripleCylinderRange) / cylinderRange * 255)), 255, 0);
+                                    color = new SKColor(Convert.ToByte(Math.Round((value - tripleRange) / range * 255)), 255, 0);
                                     break;
                                 case 4:
-                                    color = new SKColor(255, Convert.ToByte(Math.Round((fiveCylinderRange - value) / cylinderRange * 255)), 0);
+                                    color = new SKColor(255, Convert.ToByte(Math.Round((fiveRange - value) / range * 255)), 0);
                                     break;
                                 default:
-                                    color = new SKColor(255, 0, Convert.ToByte(Math.Round((value - fiveCylinderRange) / cylinderRange * 255)));
+                                    color = new SKColor(255, 0, Convert.ToByte(Math.Round((value - fiveRange) / range * 255)));
                                     break;
 
                             }
@@ -221,13 +228,16 @@ namespace Visiontech.Analyzer.View
 
                         }
 
-                        using (SKPath path = new SKPath())
+                        if (mask)
                         {
-                            path.AddCircle(Convert.ToSingle(centerX), Convert.ToSingle(centerY), Convert.ToSingle(bitmapSide * 5 / 6));
-                            canvas.ClipPath(path, SKClipOperation.Intersect);
+                            using (SKPath path = new SKPath())
+                            {
+                                path.AddCircle(Convert.ToSingle(centerX), Convert.ToSingle(centerY), Convert.ToSingle(radius));
+                                canvas.ClipPath(path, SKClipOperation.Intersect);
+                            }
                         }
 
-                        canvas.DrawBitmap(bitmap.Resize(new SKImageInfo(Convert.ToInt32(bitmapSide * 5 / 6), Convert.ToInt32(bitmapSide * 5 / 6)), SKBitmapResizeMethod.Mitchell), new SKRect(Convert.ToSingle(centerX - bitmapSide * 5 / 6), Convert.ToSingle(centerY - bitmapSide * 5 / 6), Convert.ToSingle(centerX + bitmapSide * 5 / 6), Convert.ToSingle(centerY + bitmapSide * 5 / 6)));
+                        canvas.DrawBitmap(bitmap.Resize(new SKImageInfo(Convert.ToInt32(radius), Convert.ToInt32(radius)), SKBitmapResizeMethod.Mitchell), new SKRect(Convert.ToSingle(centerX - radius), Convert.ToSingle(centerY - radius), Convert.ToSingle(centerX + radius), Convert.ToSingle(centerY + radius)));
 
                     }
 
@@ -248,30 +258,117 @@ namespace Visiontech.Analyzer.View
             }
         }
 
-        private void Toolbar_3D_Clicked(object sender, EventArgs e)
+
+        private void Toolbar_CurveMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(ToZ);
+            mapping = ToZ;
+            RightLens.InvalidateVisual();
+            LeftLens.InvalidateVisual();
         }
         private void Toolbar_CylinderMap_Clicked(object sender, EventArgs e)
         {
-            ComputeChart(ToCylinderMap);
+            mapping = ToCylinderMap;
+            RightLens.InvalidateVisual();
+            LeftLens.InvalidateVisual();
         }
         private void Toolbar_PowerMap_Clicked(object sender, EventArgs e)
+        {
+            mapping = ToPowerMap;
+            RightLens.InvalidateVisual();
+            LeftLens.InvalidateVisual();
+        }
+
+        private void Toolbar_3DCurveMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(ToZ);
+        }
+        private void Toolbar_3DCylinderMap_Clicked(object sender, EventArgs e)
+        {
+            ComputeChart(ToCylinderMap);
+        }
+        private void Toolbar_3DPowerMap_Clicked(object sender, EventArgs e)
         {
             ComputeChart(ToPowerMap);
         }
 
-        private double ToZ(threeDimensionalPointDTO point)
+        private static bool IsInside(twoDimensionalPointDTO point, double radius)
+        {
+            return mask ? Math.Sqrt(Math.Pow(point.x, 2) + Math.Pow(point.y, 2)) <= radius : Math.Abs(point.x) <= radius && Math.Abs(point.y) <= radius;
+        }
+        private static double ToZ(threeDimensionalPointDTO point)
         {
             return point.z;
         }
-        private double ToCylinderMap(threeDimensionalPointDTO point)
+        private static double ToCylinderMap(threeDimensionalPointDTO point)
         {
             return (point as analyzedPointDTO).cylinderMap;
         }
-        private double ToPowerMap(threeDimensionalPointDTO point)
+        private static double ToPowerMap(threeDimensionalPointDTO point)
         {
             return (point as analyzedPointDTO).powerMap;
+        }
+
+
+
+        private void Tooltip_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            double centerX = (sender as FrameworkElement).ActualWidth / 2.0;
+            double centerY = (sender as FrameworkElement).ActualHeight / 2.0;
+            double radius = Math.Min(centerX, centerY) * 5 / 6;
+
+            Point currentPos = e.GetPosition(sender as IInputElement);
+
+            double x = centerX - currentPos.X;
+            double y = centerY - currentPos.Y;
+
+            bool inside = IsInside(
+                new twoDimensionalPointDTO() {
+                    x = x,
+                    y = y
+                },
+                radius);
+
+            if (!floatingTip.IsOpen.Equals(inside)) {
+                floatingTip.IsOpen = inside;
+            }
+
+            if (inside)
+            {
+
+                floatingTip.PlacementTarget = sender as UIElement;
+
+                floatingTip.HorizontalOffset = currentPos.X + 20;
+                floatingTip.VerticalOffset = currentPos.Y;
+
+                analyzedPointDTO[] points = LeftLens.Equals(sender) ? model.LeftAnalyzeLensResponse.points : model.RightAnalyzeLensResponse.points;
+
+                int sqrt = Convert.ToInt32(Math.Sqrt(points.Count()));
+                int side = (sqrt - 1) / 2;
+
+                int xPoint = Convert.ToInt32(Math.Round(x * side / radius));
+                int yPoint = Convert.ToInt32(Math.Round(y * side / radius));
+
+                int index = (side + xPoint) * sqrt + side - yPoint;
+
+                floatingTip.DataContext = points[index];
+
+            }
+
+        }
+
+        private void Toolbar_Compare_Clicked(object sender, RoutedEventArgs e)
+        {
+            compare = !compare;
+            RightLens.InvalidateVisual();
+            LeftLens.InvalidateVisual();
+        }
+
+        private void Toolbar_Mask_Clicked(object sender, RoutedEventArgs e)
+        {
+            mask = !mask;
+            RightLens.InvalidateVisual();
+            LeftLens.InvalidateVisual();
         }
     }
 }
