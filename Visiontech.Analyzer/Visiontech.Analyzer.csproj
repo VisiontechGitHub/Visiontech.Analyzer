@@ -138,8 +138,8 @@
     <Reference Include="Visiontech.Commons, Version=1.0.19.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Visiontech.Commons.1.0.19\lib\netstandard2.0\Visiontech.Commons.dll</HintPath>
     </Reference>
-    <Reference Include="Visiontech.Services, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Visiontech.Services.1.0.27\lib\netstandard2.0\Visiontech.Services.dll</HintPath>
+    <Reference Include="Visiontech.Services, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Visiontech.Services.1.0.40\lib\netstandard2.0\Visiontech.Services.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

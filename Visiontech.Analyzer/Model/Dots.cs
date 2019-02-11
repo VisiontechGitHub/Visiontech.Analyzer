@@ -142,7 +142,6 @@ namespace Visiontech.Analyzer.Model
             }
             else if (Input.NumTouches == 2)
             {
-
                 TouchState touch1 = Input.GetTouch(0);
                 TouchState touch2 = Input.GetTouch(1);
 

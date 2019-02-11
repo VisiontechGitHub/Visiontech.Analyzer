@@ -34,11 +34,11 @@ namespace VisualizzatoreWPF
 
             Container.Services.AddSingleton<IAuthenticatingMessageInspector, AuthenticatingMessageInspector>();
 
-            Container.Services.AddSingleton<ITokenService, TokenService>(serviceProvider => new TokenService("https://cas.dev.optoplus.cloud:8543/cas/v1/tickets", "services.dev.optoplus.cloud/optoplus-services-web"));
+            Container.Services.AddSingleton<ITokenService, TokenService>(serviceProvider => new TokenService("http://cas.int.optoplus.cloud/cas/v1/tickets", "services.int.optoplus.cloud/optoplus-services-web"));
 
-            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<CredentialSoap, CredentialSoapClient>(serviceProvider, new EndpointAddress("https://services.dev.optoplus.cloud:8443/optoplus-services-web/CredentialSoap")));
-            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<GroupSoap, GroupSoapClient>(serviceProvider, new EndpointAddress("https://services.dev.optoplus.cloud:8443/optoplus-services-web/GroupSoap")));
-            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<ComputeSoap, ComputeSoapClient>(serviceProvider, new EndpointAddress("https://services.dev.optoplus.cloud:8443/optoplus-services-web/ComputeSoap")));
+            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<CredentialSoap, CredentialSoapClient>(serviceProvider, new EndpointAddress("http://services.int.optoplus.cloud/optoplus-services-web/CredentialSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
+            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<GroupSoap, GroupSoapClient>(serviceProvider, new EndpointAddress("http://services.int.optoplus.cloud/optoplus-services-web/GroupSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
+            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<ComputeSoap, ComputeSoapClient>(serviceProvider, new EndpointAddress("http://services.dev.optoplus.cloud/optoplus-services-web/ComputeSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
 
             Container.Services.AddSingleton<MainModel>();
             Container.Services.AddSingleton<LoginModel>();
