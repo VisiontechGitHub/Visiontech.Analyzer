@@ -38,7 +38,7 @@ namespace VisualizzatoreWPF
 
             Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<CredentialSoap, CredentialSoapClient>(serviceProvider, new EndpointAddress("http://services.int.optoplus.cloud/optoplus-services-web/CredentialSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
             Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<GroupSoap, GroupSoapClient>(serviceProvider, new EndpointAddress("http://services.int.optoplus.cloud/optoplus-services-web/GroupSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
-            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<ComputeSoap, ComputeSoapClient>(serviceProvider, new EndpointAddress("http://services.dev.optoplus.cloud/optoplus-services-web/ComputeSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
+            Container.Services.AddSingleton(serviceProvider => ClientBaseUtils.InitClientBase<ComputeSoap, ComputeSoapClient>(serviceProvider, new EndpointAddress("http://services.int.optoplus.cloud/optoplus-services-web/ComputeSoap"), BasicHttpSecurityMode.None, HttpClientCredentialType.Basic));
 
             Container.Services.AddSingleton<MainModel>();
             Container.Services.AddSingleton<LoginModel>();
